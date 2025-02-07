@@ -7,3 +7,5 @@ Relax a 3-D graph.
 ```shell
 poetry add git+https://github.com/vitroid/graph-relax
 ```
+
+GraphForm(今は動かないが)も、これを利用するとシンプルにできるはず。

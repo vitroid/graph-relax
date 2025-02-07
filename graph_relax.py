@@ -2,6 +2,8 @@ import numpy as np
 import networkx as nx
 from collections import defaultdict
 
+__all__ = ["relax"]
+
 
 class Interaction:
     def __init__(self, forcefunc):
@@ -22,16 +24,25 @@ class Interaction:
         return forces
 
 
-def relax(g, node_pos, cell=None, dt=0.01, iters=10):
-    # 隣接情報gを立体化する。
-    # node_posを初期配置とする。
-    # cell行列が与えられる場合はnode_posはセル相対でなければならない。
-    # 今はcellの調節はしない。結合長さは1とする。
-    # 隣接しない対の距離はネットワーク上の距離にする。ただし、max_walkよりも遠い節点間には力は働かない。
+def relax(
+    g: nx.Graph,
+    node_pos: np.ndarray,
+    cell: np.ndarray = None,
+    dt: float = 0.01,
+    iters: int = 10,
+) -> np.ndarray:
+    """Relax the shape of a graph.
 
-    # g から 距離行列(距離グラフ)を生成する。連結でない場合は打ち切ってよい。
-    # 計算量を減らしたいなら、距離行列を間引けばいい。遠距離の対ほど間引くようにする。(というより、遠距離の対ほど増えるので、その増加を抑えるように間引けばいい)
-    # まずは とりあえず全部計算する。
+    Args:
+        g (nx.Graph): a graph describing the connectivity between nodes.
+        node_pos (np.ndarray): Initial positions of the nodes. Should it be in fractional coordinates when cell is specified.
+        cell (np.ndarray, optional): The cell matrix. Defaults to None.
+        dt (float, optional): Time delta for energy minimization. Defaults to 0.01.
+        iters (int, optional): Number of iterations. Defaults to 10.
+
+    Returns:
+        np.ndarray: Updated positions of the nodes.
+    """
     if cell is not None:
         celli = np.linalg.inv(cell)
     D = dict(nx.all_pairs_shortest_path_length(g))
