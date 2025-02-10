@@ -6,4 +6,4 @@ Relax a 3-D graph under the periodic bondary condition.
 poetry add git+https://github.com/vitroid/graph-relax
 ```
 
-It should be implemented in [GraphForm](../GraphForm).
+It should be implemented in [GraphForm](../../../GraphForm).
